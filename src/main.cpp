@@ -1,19 +1,19 @@
 #include <Arduino.h>
 
-#define ENA 14  // Enable/speed motors Right
-#define ENB 12  // Enable/speed motors Left
-#define IN_1 15 // L298N in1 motors Rightx
-#define IN_2 13 // L298N in2 motors Right
-#define IN_3 3  // L298N in3 motors Left
-#define IN_4 5  // L298N in4 motors Left
+#define ENA 14  // D5
+#define ENB 12  // D6
+#define IN_1 15 // D8
+#define IN_2 13 // D7
+#define IN_3 2  // D4
+#define IN_4 5  // D1
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-String command;     // String to store app command state.
-String lastCommand; // String to store app command state.
-int speedCar = 800; // 400 - 1023.
+String command = "S";     // String to store app command state.
+String lastCommand = ""; // String to store app command state.
+int speedCar = 128; // 400 - 1023.
 int speed_Coeff = 3;
 bool cringe = false;
 
@@ -172,27 +172,45 @@ void loop()
   command = server.arg("State");
   if (command != lastCommand)
   {
-    // Serial.println(command);
-    if (command == "S")
+    Serial.println(command);
+    if (command == "F")
+      goAhead();
+    else if (command == "B")
+      goBack();
+    else if (command == "L")
+      goLeft();
+    else if (command == "R")
+      goRight();
+    else if (command == "I")
+      goAheadRight();
+    else if (command == "G")
+      goAheadLeft();
+    else if (command == "J")
+      goBackRight();
+    else if (command == "H")
+      goBackLeft();
+    else if (command == "0")
+      speedCar = 400;
+    else if (command == "1")
+      speedCar = 470;
+    else if (command == "2")
+      speedCar = 540;
+    else if (command == "3")
+      speedCar = 610;
+    else if (command == "4")
+      speedCar = 680;
+    else if (command == "5")
+      speedCar = 750;
+    else if (command == "6")
+      speedCar = 820;
+    else if (command == "7")
+      speedCar = 890;
+    else if (command == "8")
+      speedCar = 960;
+    else if (command == "9")
+      speedCar = 1023;
+    else if (command == "S")
       stopRobot();
-    else if (command == "B") goBack();
-    else if (command == "L") goLeft();
-    else if (command == "R") goRight();
-    else if (command == "I") goAheadRight();
-    else if (command == "G") goAheadLeft();
-    else if (command == "J") goBackRight();
-    else if (command == "H") goBackLeft();
-    else if (command == "0") speedCar = 400;
-    else if (command == "1") speedCar = 470;
-    else if (command == "2") speedCar = 540;
-    else if (command == "3") speedCar = 610;
-    else if (command == "4") speedCar = 680;
-    else if (command == "5") speedCar = 750;
-    else if (command == "6") speedCar = 820;
-    else if (command == "7") speedCar = 890;
-    else if (command == "8") speedCar = 960;
-    else if (command == "9") speedCar = 1023;
-    else if (command == "S") stopRobot();
     // else if (command == "L")
     // {
     //   cringe = !cringe;
