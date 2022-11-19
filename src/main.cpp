@@ -13,6 +13,7 @@
 
 String command = "S";     // String to store app command state.
 String lastCommand = ""; // String to store app command state.
+String state = "u";     // String to store app command state.
 int speedCar = 128; // 400 - 1023.
 int speed_Coeff = 3;
 bool cringe = false;
@@ -170,9 +171,13 @@ void loop()
 {
   server.handleClient();
   command = server.arg("State");
+  state = server.arg("State");
+  
   if (command != lastCommand)
   {
     Serial.println(command);
+    Serial.println(state);
+    Serial.println("------------------");
     if (command == "F")
       goAhead();
     else if (command == "B")
