@@ -175,30 +175,30 @@ void loop()
     // Serial.println(command);
     if (command == "S")
       stopRobot();
-    // else if (command == "B") goBack();
-    // else if (command == "L") goLeft();
-    // else if (command == "R") goRight();
-    // else if (command == "I") goAheadRight();
-    // else if (command == "G") goAheadLeft();
-    // else if (command == "J") goBackRight();
-    // else if (command == "H") goBackLeft();
-    // else if (command == "0") speedCar = 400;
-    // else if (command == "1") speedCar = 470;
-    // else if (command == "2") speedCar = 540;
-    // else if (command == "3") speedCar = 610;
-    // else if (command == "4") speedCar = 680;
-    // else if (command == "5") speedCar = 750;
-    // else if (command == "6") speedCar = 820;
-    // else if (command == "7") speedCar = 890;
-    // else if (command == "8") speedCar = 960;
-    // else if (command == "9") speedCar = 1023;
-    // else if (command == "S") stopRobot();
-    else if (command == "L")
-    {
-      cringe = !cringe;
-      digitalWrite(LED_BUILTIN, cringe);
-      Serial.println("WTH BRO");
-    }
+    else if (command == "B") goBack();
+    else if (command == "L") goLeft();
+    else if (command == "R") goRight();
+    else if (command == "I") goAheadRight();
+    else if (command == "G") goAheadLeft();
+    else if (command == "J") goBackRight();
+    else if (command == "H") goBackLeft();
+    else if (command == "0") speedCar = 400;
+    else if (command == "1") speedCar = 470;
+    else if (command == "2") speedCar = 540;
+    else if (command == "3") speedCar = 610;
+    else if (command == "4") speedCar = 680;
+    else if (command == "5") speedCar = 750;
+    else if (command == "6") speedCar = 820;
+    else if (command == "7") speedCar = 890;
+    else if (command == "8") speedCar = 960;
+    else if (command == "9") speedCar = 1023;
+    else if (command == "S") stopRobot();
+    // else if (command == "L")
+    // {
+    //   cringe = !cringe;
+    //   digitalWrite(LED_BUILTIN, cringe);
+    //   Serial.println("WTH BRO");
+    // }
     lastCommand = command;
   }
 }
