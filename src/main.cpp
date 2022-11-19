@@ -1,20 +1,20 @@
 #include <Arduino.h>
-
-#define ENA 14  // Enable/speed motors Right
-#define ENB 12  // Enable/speed motors Left
-#define IN_1 15 // L298N in1 motors Rightx
-#define IN_2 13 // L298N in2 motors Right
-#define IN_3 3  // L298N in3 motors Left
-#define IN_4 5  // L298N in4 motors Left
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-String command;     // String to store app command state.
-String lastCommand; // String to store app command state.
-int speedCar = 800; // 400 - 1023.
-int speed_Coeff = 3;
+#define ENA 14  // (D5) => ENA - LEFT
+#define ENB 12  // (D6) => ENB - RIGHT
+#define IN_1 15 // (D8) => in1 - LEFT
+#define IN_2 13 // (D7) => in2 - LEFT
+#define IN_3 2  // (D4) => in3 - RIGHT
+#define IN_4 0  // (D3) => in4 - RIGHT
+
+String keyState;
+String lastKeyState; 
+String keyPressed;
+String lastKeyPressed; 
+int speedCar = 255; // 0 a 255
 bool cringe = false;
 
 const char *ssid = "Make DIY";
@@ -28,6 +28,74 @@ void HTTP_handleRoot(void)
   }
   server.send(200, "text/html", "");
   delay(1);
+}
+
+// motor drive
+void forwardRight(int speed){
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, HIGH);
+  analogWrite(ENB, speed);
+}
+
+void backwardRight(int speed){
+  digitalWrite(IN_3, HIGH);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, speed);
+}
+
+void forwardLeft(int speed){
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, HIGH);
+  analogWrite(ENA, speed);
+}
+
+void backwardLeft(int speed){
+  digitalWrite(IN_1, HIGH);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, speed);
+}
+
+void stopRight(){
+  digitalWrite(IN_3, LOW);
+  digitalWrite(IN_4, LOW);
+  analogWrite(ENB, 0);
+}
+
+void stopLeft(){
+  digitalWrite(IN_1, LOW);
+  digitalWrite(IN_2, LOW);
+  analogWrite(ENA, 0);
+}
+
+// robot move
+void forward()
+{
+  forwardLeft(speedCar);
+  forwardRight(speedCar);
+}
+
+void backward()
+{
+  backwardLeft(speedCar);
+  backwardRight(speedCar);
+}
+
+void turnRight()
+{
+  backwardRight(speedCar);
+  forwardLeft(speedCar);
+}
+
+void turnLeft()
+{
+  backwardLeft(speedCar);
+  forwardRight(speedCar);
+}
+
+void stopRobot()
+{
+  stopLeft();
+  stopRight();
 }
 
 void setup()
@@ -58,147 +126,32 @@ void setup()
   server.begin();
 }
 
-void goAhead()
-{
-
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speedCar);
-}
-
-void goBack()
-{
-
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speedCar);
-}
-
-void goRight()
-{
-
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speedCar);
-}
-
-void goLeft()
-{
-
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speedCar);
-}
-
-void goAheadRight()
-{
-
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speedCar / speed_Coeff);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speedCar);
-}
-
-void goAheadLeft()
-{
-
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speedCar / speed_Coeff);
-}
-
-void goBackRight()
-{
-
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speedCar / speed_Coeff);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speedCar);
-}
-
-void goBackLeft()
-{
-
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speedCar / speed_Coeff);
-}
-
-void stopRobot()
-{
-
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speedCar);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speedCar);
-}
 
 void loop()
 {
   server.handleClient();
-  command = server.arg("State");
-  if (command != lastCommand)
+
+  keyState = server.arg("State");
+  keyPressed = server.arg("Key");
+
+  if (keyState != lastKeyState || keyPressed != lastKeyPressed)
   {
-    // Serial.println(command);
-    if (command == "S")
+    Serial.print(keyState);
+    Serial.println(keyPressed);
+    if(keyPressed == "D"){
+      if (keyState == "w") forward();
+      if (keyState == "S") backward();
+      if (keyState == "A") turnLeft();
+      if (keyState == "D") turnRight();
+      if (keyState == "U") forwardLeft(speedCar);
+      if (keyState == "J") backwardLeft(speedCar);
+      if (keyState == "O") forwardRight(speedCar);
+      if (keyState == "L") backwardRight(speedCar);
+    }
+    if(keyPressed == "U"){
       stopRobot();
-    else if (command == "B") goBack();
-    else if (command == "L") goLeft();
-    else if (command == "R") goRight();
-    else if (command == "I") goAheadRight();
-    else if (command == "G") goAheadLeft();
-    else if (command == "J") goBackRight();
-    else if (command == "H") goBackLeft();
-    else if (command == "0") speedCar = 400;
-    else if (command == "1") speedCar = 470;
-    else if (command == "2") speedCar = 540;
-    else if (command == "3") speedCar = 610;
-    else if (command == "4") speedCar = 680;
-    else if (command == "5") speedCar = 750;
-    else if (command == "6") speedCar = 820;
-    else if (command == "7") speedCar = 890;
-    else if (command == "8") speedCar = 960;
-    else if (command == "9") speedCar = 1023;
-    else if (command == "S") stopRobot();
-    // else if (command == "L")
-    // {
-    //   cringe = !cringe;
-    //   digitalWrite(LED_BUILTIN, cringe);
-    //   Serial.println("WTH BRO");
-    // }
-    lastCommand = command;
+    }
+    lastKeyPressed = keyPressed;
+    lastKeyState = keyState;
   }
 }
