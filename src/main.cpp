@@ -74,36 +74,42 @@ void HTTP_handleRoot(void)
 void forwardRight(int speed){
   digitalWrite(IN_3, LOW);
   digitalWrite(IN_4, HIGH);
-  analogWrite(ENB, speed);
+  digitalWrite(ENB, HIGH);
+  // analogWrite(ENB, speed);
 }
 
 void backwardRight(int speed){
   digitalWrite(IN_3, HIGH);
   digitalWrite(IN_4, LOW);
-  analogWrite(ENB, speed);
+  digitalWrite(ENB, HIGH);
+  // analogWrite(ENB, speed);
 }
 
 void forwardLeft(int speed){
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
-  analogWrite(ENA, speed);
+  digitalWrite(ENA, HIGH);
+  // analogWrite(ENA, speed);
 }
 
 void backwardLeft(int speed){
   digitalWrite(IN_1, HIGH);
   digitalWrite(IN_2, LOW);
-  analogWrite(ENA, speed);
+  digitalWrite(ENA, HIGH);
+  // analogWrite(ENA, speed);
 }
 
 void stopRight(){
   digitalWrite(IN_3, LOW);
   digitalWrite(IN_4, LOW);
+  digitalWrite(ENB, HIGH);
   // analogWrite(ENB, 0);
 }
 
 void stopLeft(){
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, LOW);
+  digitalWrite(ENA, HIGH);
   // analogWrite(ENA, 0);
 }
 
@@ -264,8 +270,8 @@ void loop()
       if (pressed == "r") leverCrucifix(0);
       if (pressed == "f") descendreLaColereDeDieu(0);
       
-      if (pressed == "t") approcheHeaven(0, 10);
-      if (pressed == "g") approcheHell(0, 10);
+      // if (pressed == "t") approcheHeaven(0, 10);
+      // if (pressed == "g") approcheHell(0, 10);
     }
     if(state == "UP"){
       if (!(pressed == "r" or pressed == "f" or pressed == "t" or pressed == "g")){
