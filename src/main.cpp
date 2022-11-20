@@ -25,6 +25,8 @@
 
 #define NUM_SERVOS    2
 
+#define DELAY_SERVO 125
+
 
 //wifi
 const char *ssid = "Make DIY";
@@ -136,17 +138,28 @@ void stopRobot()
   stopRight();
 }
 
+void shutDownServo(int servo){
+  if(ISR_Servo.isEnabled(servo)) ISR_Servo.disable(servo);
+}
+
+void bonjourServo(int servo){
+  if(!ISR_Servo.isEnabled(servo)) ISR_Servo.enable(servo);
+}
+
 //ServoHandler
 void leverCrucifix(int servo){
+  bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 0);
-  delay(125);
+  delay(DELAY_SERVO);
 }
 void descendreLaColereDeDieu(int servo){
+  bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 180);
-  delay(125);
+  delay(DELAY_SERVO);
 }
 
 void approcheHeaven(int servo, int step){
+  bonjourServo(servo);
   int pos;
   if (servo == 0){
     position_servo1 += step;
@@ -157,24 +170,11 @@ void approcheHeaven(int servo, int step){
     pos = position_servo2;
   }
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
-  delay(125);
-}
-
-void approcheHeaven(int servo, int step){
-  int pos;
-  if (servo == 0){
-    position_servo1 += step;
-    pos = position_servo1;
-  }
-  else if(servo == 1){
-    position_servo2 += step;
-    pos = position_servo2;
-  }
-  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
-  delay(125);
+  delay(DELAY_SERVO);
 }
 
 void approcheHell(int servo, int step){
+  bonjourServo(servo);
   int pos;
   if (servo == 0){
     position_servo1 -= step;
@@ -185,8 +185,10 @@ void approcheHell(int servo, int step){
     pos = position_servo2;
   }
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
-  delay(125);
+  delay(DELAY_SERVO);
 }
+
+
 
 void setup()
 {
