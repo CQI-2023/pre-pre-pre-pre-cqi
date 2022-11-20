@@ -264,21 +264,12 @@ void loop()
       if (pressed == "t") approcheHeaven(0, 10);
       if (pressed == "g") approcheHell(0, 10);
     }
-<<<<<<< HEAD
     if(state == "UP"){
       if (pressed == "w" && pressed == "s" && pressed == "a" && 
       pressed == "d" && pressed == "u" && pressed == "j" 
       && pressed == "o" && pressed == "l"){
         stopRobot();
       }
-=======
-    if(keyPressed == "UP"){
-      stopRobot();
-      // if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
-      // keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
-      // && keyPressed == "o" && keyPressed == "l"){
-      // }
->>>>>>> master
     }
     lastPressed = pressed;
     lastState = state;
