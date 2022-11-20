@@ -154,14 +154,21 @@ void bonjourServo(int servo){
 
 //ServoHandler
 void leverCrucifix(int servo){
-  // bonjourServo(servo);
+  bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 0);
   // delay(DELAY_SERVO);
 }
 void descendreLaColereDeDieu(int servo){
-  // bonjourServo(servo);
+  bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 180);
   // delay(DELAY_SERVO);
+}
+
+void destroyEveryting(){
+  leverCrucifix(0);
+  leverCrucifix(1);
+  descendreLaColereDeDieu(0);
+  descendreLaColereDeDieu(1);
 }
 
 void approcheHeaven(int servo, int step){
@@ -262,6 +269,12 @@ void loop()
       
       if (pressed == "t") approcheHeaven(0, 10);
       if (pressed == "g") approcheHell(0, 10);
+
+      if (pressed == "i") leverCrucifix(1);
+      if (pressed == "k") descendreLaColereDeDieu(1);
+
+      if (pressed == "y") approcheHeaven(1, 10);
+      if (pressed == "h") approcheHell(1, 10);
     }
     if(state == "UP"){
       if (!(pressed == "r" or pressed == "f" or pressed == "t" or pressed == "g")){
