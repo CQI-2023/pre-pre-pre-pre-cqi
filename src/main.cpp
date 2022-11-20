@@ -7,10 +7,10 @@
 
 #define ENA 14  // (D5) => ENA - LEFT
 #define ENB 12  // (D6) => ENB - RIGHT
-#define IN_1 15 // (D8) => in1 - LEFT
-#define IN_2 13 // (D7) => in2 - LEFT
-#define IN_3 2  // (D4) => in3 - RIGHT
-#define IN_4 0  // (D3) => in4 - RIGHT
+#define IN_2 15 // (D8) => in1 - LEFT
+#define IN_1 13 // (D7) => in2 - LEFT
+#define IN_4 2  // (D4) => in3 - RIGHT
+#define IN_3 0  // (D3) => in4 - RIGHT
 
 #ifndef ESP8266
   #error This code is designed to run on ESP8266 platform! Please check your Tools->Board setting.
@@ -29,7 +29,7 @@
 
 
 //wifi
-const char *ssid = "Make DIY";
+const char *ssid = "Crucifix";
 ESP8266WebServer server(80);
 
 // Keys
@@ -39,7 +39,7 @@ String keyPressed;
 String lastKeyPressed; 
 
 // motors
-int speedCar = 255; // 0 a 255
+int speedCar = 200; // 0 a 255
 bool cringe = false;
 
 //Servos
@@ -160,7 +160,7 @@ void descendreLaColereDeDieu(int servo){
 
 void approcheHeaven(int servo, int step){
   bonjourServo(servo);
-  int pos;
+  int pos = 0;
   if (servo == 0){
     position_servo1 += step;
     pos = position_servo1;
@@ -175,7 +175,7 @@ void approcheHeaven(int servo, int step){
 
 void approcheHell(int servo, int step){
   bonjourServo(servo);
-  int pos;
+  int pos = 0;
   if (servo == 0){
     position_servo1 -= step;
     pos = position_servo1;
@@ -204,7 +204,7 @@ void setup()
 
   // Connecting WiFi
   WiFi.mode(WIFI_AP);
-  WiFi.softAP(ssid);
+  WiFi.softAP(ssid,"GOAT");
 
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
@@ -264,7 +264,7 @@ void loop()
       if (keyPressed == "t") approcheHeaven(0, 10);
       if (keyPressed == "g") approcheHell(0, 10);
     }
-    if(keyPressed == "UP"){
+    if(keyState == "UP"){
       stopRobot();
       // if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
       // keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
