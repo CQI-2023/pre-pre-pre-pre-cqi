@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include "ESP8266_ISR_Servo.h"
 // #include <pwm.h>
-// #include "Servo.h"
 
 #define ENA 14  // (D5) => ENA - LEFT
 #define ENB 12  // (D6) => ENB - RIGHT
@@ -12,9 +12,6 @@
 #define IN_3 2  // (D4) => in3 - RIGHT
 #define IN_4 0  // (D3) => in4 - RIGHT
 
-#define SERVO1 5 // (D1)
-#define SERVO2 4 // (D2)
-
 #ifndef ESP8266
   #error This code is designed to run on ESP8266 platform! Please check your Tools->Board setting.
 #endif
@@ -22,25 +19,11 @@
 #define TIMER_INTERRUPT_DEBUG       1
 #define ISR_SERVO_DEBUG             1
 
-// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
-#include "ESP8266_ISR_Servo.h"
-
 // Published values for SG90 servos; adjust if needed
 #define MIN_MICROS      554  //544
 #define MAX_MICROS      2450 //2450
 
 #define NUM_SERVOS    2
-
-typedef struct
-{
-  int     servoIndex;
-  uint8_t servoPin;
-} ISR_servo_t;
-
-ISR_servo_t ISR_servo[NUM_SERVOS] =
-{
-  { -1, D0 }, { -1, D1 }//, { -1, D2 }, { -1, D5 }, { -1, D6 }, { -1, D7 }
-};
 
 
 //wifi
@@ -58,13 +41,22 @@ int speedCar = 255; // 0 a 255
 bool cringe = false;
 
 //Servos
-// Servo servo1;
-// Servo servo2;
 int position_servo1 = 20;
 int position_servo2 = 20;
 const int position_pelle_max = 160;
 const int position_pelle_min = 20;
 const int position_pelle_init = 30;
+
+typedef struct
+{
+  int     servoIndex;
+  uint8_t servoPin;
+} ISR_servo_t;
+
+ISR_servo_t ISR_servo[NUM_SERVOS] =
+{
+  { -1, D0 }, { -1, D1 }//, { -1, D2 }, { -1, D5 }, { -1, D6 }, { -1, D7 }
+};
 
 void HTTP_handleRoot(void)
 {
@@ -145,23 +137,14 @@ void stopRobot()
 }
 
 //ServoHandler
-// void leverPelle(){
-//   if(servo1.read() < position_pelle_max){
-//     servo2.write(position_servo1++);
-//   }
-//   if(servo2.read() < position_pelle_max){
-//     servo2.write(position_servo2++);
-//   }
-// }
-
-// void descendrePelle(){
-//   if(servo1.read() > position_pelle_min){
-//     servo2.write(position_servo1--);
-//   }
-//   if(servo2.read() > position_pelle_min){
-//     servo2.write(position_servo2--);
-//   }
-// }
+void leverCrucifix(int servo){
+  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 0);
+  delay(500);
+}
+void descendreLaColereDeDieu(int servo){
+  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 180);
+  delay(500);
+}
 
 // unsigned long servo1Last = 0;
 
@@ -193,11 +176,6 @@ void setup()
   server.onNotFound(HTTP_handleRoot);
   server.begin();
 
-  // servo1.attach(SERVO1);
-  // servo2.attach(SERVO2);
-  // servo1.write(position_pelle_init);
-  // servo2.write(position_pelle_init);
-
   for (int index = 0; index < NUM_SERVOS; index++)
   {
     ISR_servo[index].servoIndex = ISR_Servo.setupServo(ISR_servo[index].servoPin, MIN_MICROS, MAX_MICROS);
@@ -213,11 +191,6 @@ void setup()
 
 void loop()
 {
-  ISR_Servo.setPosition(ISR_servo[0].servoIndex, 0);
-  delay(500);
-  ISR_Servo.setPosition(ISR_servo[0].servoIndex, 180);
-  delay(500);
-
   server.handleClient();
 
   keyState = server.arg("State");
@@ -231,6 +204,7 @@ void loop()
   //   if (keyState == "DOWN") leverPelle();
   //   if (keyPressed == "f") descendrePelle();
   // }
+
   // motor hanlder fonctionne
   if (keyState != lastKeyState || keyPressed != lastKeyPressed)
   {
@@ -246,9 +220,15 @@ void loop()
       if (keyPressed == "j") backwardLeft(speedCar);
       if (keyPressed == "o") forwardRight(speedCar);
       if (keyPressed == "l") backwardRight(speedCar);
+      if (keyPressed == "r") leverCrucifix(0);
+      if (keyPressed == "f") descendreLaColereDeDieu(0);
     }
-    if(keyPressed == "U"){
-      stopRobot();
+    if(keyPressed == "UP"){
+      if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
+      keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
+      && keyPressed == "o" && keyPressed == "l"){
+        stopRobot();
+      }
     }
     lastKeyPressed = keyPressed;
     lastKeyState = keyState;
