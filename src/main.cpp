@@ -29,7 +29,7 @@
 
 
 //wifi
-const char *ssid = "Crucifix";
+const char *ssid = "HP2545 printer";
 ESP8266WebServer server(80);
 
 // Keys
@@ -98,13 +98,13 @@ void backwardLeft(int speed){
 void stopRight(){
   digitalWrite(IN_3, LOW);
   digitalWrite(IN_4, LOW);
-  analogWrite(ENB, 0);
+  // analogWrite(ENB, 0);
 }
 
 void stopLeft(){
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, LOW);
-  analogWrite(ENA, 0);
+  // analogWrite(ENA, 0);
 }
 
 // robot move
@@ -148,14 +148,14 @@ void bonjourServo(int servo){
 
 //ServoHandler
 void leverCrucifix(int servo){
-  bonjourServo(servo);
+  // bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 0);
-  delay(DELAY_SERVO);
+  // delay(DELAY_SERVO);
 }
 void descendreLaColereDeDieu(int servo){
-  bonjourServo(servo);
+  // bonjourServo(servo);
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 180);
-  delay(DELAY_SERVO);
+  // delay(DELAY_SERVO);
 }
 
 void approcheHeaven(int servo, int step){
@@ -204,7 +204,7 @@ void setup()
 
   // Connecting WiFi
   WiFi.mode(WIFI_AP);
-  WiFi.softAP(ssid,"GOAT");
+  WiFi.softAP(ssid);
 
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
@@ -232,7 +232,7 @@ void loop()
 {
   server.handleClient();
 
-  state = server.arg("state");
+  state = server.arg("State");
   pressed = server.arg("Key");
 
   // if (servo1Last-micros())
@@ -245,6 +245,7 @@ void loop()
   // }
 
   // motor hanlder fonctionne
+  // if (state != lastState || pressed != lastPressed)
   if (state != lastState || pressed != lastPressed)
   {
     Serial.println(state);
@@ -259,15 +260,15 @@ void loop()
       if (pressed == "j") backwardLeft(speedCar);
       if (pressed == "o") forwardRight(speedCar);
       if (pressed == "l") backwardRight(speedCar);
+
       if (pressed == "r") leverCrucifix(0);
       if (pressed == "f") descendreLaColereDeDieu(0);
+      
       if (pressed == "t") approcheHeaven(0, 10);
       if (pressed == "g") approcheHell(0, 10);
     }
     if(state == "UP"){
-      if (pressed == "w" && pressed == "s" && pressed == "a" && 
-      pressed == "d" && pressed == "u" && pressed == "j" 
-      && pressed == "o" && pressed == "l"){
+      if (!(pressed == "r" or pressed == "f" or pressed == "t" or pressed == "g")){
         stopRobot();
       }
     }
