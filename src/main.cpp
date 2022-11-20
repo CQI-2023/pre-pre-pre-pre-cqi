@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <pwm.h>
 
 #define ENA 14  // (D5) => ENA - LEFT
 #define ENB 12  // (D6) => ENB - RIGHT
@@ -22,10 +23,10 @@ ESP8266WebServer server(80);
 
 void HTTP_handleRoot(void)
 {
-  if (server.hasArg("State"))
-  {
-    Serial.println(server.arg("State"));
-  }
+  // if (server.hasArg("State"))
+  // {
+  //   Serial.println(server.arg("State"));
+  // }
   server.send(200, "text/html", "");
   delay(1);
 }
@@ -136,19 +137,20 @@ void loop()
 
   if (keyState != lastKeyState || keyPressed != lastKeyPressed)
   {
-    Serial.print(keyState);
+    Serial.println(keyState);
     Serial.println(keyPressed);
-    if(keyPressed == "D"){
-      if (keyState == "w") forward();
-      if (keyState == "S") backward();
-      if (keyState == "A") turnLeft();
-      if (keyState == "D") turnRight();
-      if (keyState == "U") forwardLeft(speedCar);
-      if (keyState == "J") backwardLeft(speedCar);
-      if (keyState == "O") forwardRight(speedCar);
-      if (keyState == "L") backwardRight(speedCar);
+    Serial.println("-------");
+    if(keyState == "DOWN"){
+      if (keyPressed == "w") forward();
+      if (keyPressed == "s") backward();
+      if (keyPressed == "a") turnLeft();
+      if (keyPressed == "d") turnRight();
+      if (keyPressed == "u") forwardLeft(speedCar);
+      if (keyPressed == "j") backwardLeft(speedCar);
+      if (keyPressed == "o") forwardRight(speedCar);
+      if (keyPressed == "l") backwardRight(speedCar);
     }
-    if(keyPressed == "U"){
+    if(keyState == "UP"){
       stopRobot();
     }
     lastKeyPressed = keyPressed;
