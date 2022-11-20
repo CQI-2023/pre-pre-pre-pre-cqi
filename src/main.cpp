@@ -241,17 +241,7 @@ void loop()
   state = server.arg("State");
   pressed = server.arg("Key");
 
-  // if (servo1Last-micros())
-  //   Serial.println();
-
-  // servo handler pas fini
-  // if(pressed == "r"){
-  //   if (state == "DOWN") leverPelle();
-  //   if (pressed == "f") descendrePelle();
-  // }
-
   // motor hanlder fonctionne
-  // if (state != lastState || pressed != lastPressed)
   if (state != lastState || pressed != lastPressed)
   {
     Serial.println(state);
@@ -270,8 +260,8 @@ void loop()
       if (pressed == "r") leverCrucifix(0);
       if (pressed == "f") descendreLaColereDeDieu(0);
       
-      // if (pressed == "t") approcheHeaven(0, 10);
-      // if (pressed == "g") approcheHell(0, 10);
+      if (pressed == "t") approcheHeaven(0, 10);
+      if (pressed == "g") approcheHell(0, 10);
     }
     if(state == "UP"){
       if (!(pressed == "r" or pressed == "f" or pressed == "t" or pressed == "g")){
