@@ -33,10 +33,10 @@ const char *ssid = "Crucifix";
 ESP8266WebServer server(80);
 
 // Keys
-String keyState;
-String lastKeyState; 
-String keyPressed;
-String lastKeyPressed; 
+String state;
+String lastState; 
+String pressed;
+String lastPressed; 
 
 // motors
 int speedCar = 200; // 0 a 255
@@ -62,9 +62,9 @@ ISR_servo_t ISR_servo[NUM_SERVOS] =
 
 void HTTP_handleRoot(void)
 {
-  // if (server.hasArg("State"))
+  // if (server.hasArg("state"))
   // {
-  //   Serial.println(server.arg("State"));
+  //   Serial.println(server.arg("state"));
   // }
   server.send(200, "text/html", "");
   delay(1);
@@ -232,46 +232,46 @@ void loop()
 {
   server.handleClient();
 
-  keyState = server.arg("State");
-  keyPressed = server.arg("Key");
+  state = server.arg("state");
+  pressed = server.arg("Key");
 
   // if (servo1Last-micros())
   //   Serial.println();
 
   // servo handler pas fini
-  // if(keyPressed == "r"){
-  //   if (keyState == "DOWN") leverPelle();
-  //   if (keyPressed == "f") descendrePelle();
+  // if(pressed == "r"){
+  //   if (state == "DOWN") leverPelle();
+  //   if (pressed == "f") descendrePelle();
   // }
 
   // motor hanlder fonctionne
-  if (keyState != lastKeyState || keyPressed != lastKeyPressed)
+  if (state != lastState || pressed != lastPressed)
   {
-    Serial.println(keyState);
-    Serial.println(keyPressed);
+    Serial.println(state);
+    Serial.println(pressed);
     Serial.println("-------");
-    if(keyState == "DOWN"){
-      if (keyPressed == "w") forward();
-      if (keyPressed == "s") backward();
-      if (keyPressed == "a") turnLeft();
-      if (keyPressed == "d") turnRight();
-      if (keyPressed == "u") forwardLeft(speedCar);
-      if (keyPressed == "j") backwardLeft(speedCar);
-      if (keyPressed == "o") forwardRight(speedCar);
-      if (keyPressed == "l") backwardRight(speedCar);
-      if (keyPressed == "r") leverCrucifix(0);
-      if (keyPressed == "f") descendreLaColereDeDieu(0);
-      if (keyPressed == "t") approcheHeaven(0, 10);
-      if (keyPressed == "g") approcheHell(0, 10);
+    if(state == "DOWN"){
+      if (pressed == "w") forward();
+      if (pressed == "s") backward();
+      if (pressed == "a") turnLeft();
+      if (pressed == "d") turnRight();
+      if (pressed == "u") forwardLeft(speedCar);
+      if (pressed == "j") backwardLeft(speedCar);
+      if (pressed == "o") forwardRight(speedCar);
+      if (pressed == "l") backwardRight(speedCar);
+      if (pressed == "r") leverCrucifix(0);
+      if (pressed == "f") descendreLaColereDeDieu(0);
+      if (pressed == "t") approcheHeaven(0, 10);
+      if (pressed == "g") approcheHell(0, 10);
     }
-    if(keyState == "UP"){
-      stopRobot();
-      // if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
-      // keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
-      // && keyPressed == "o" && keyPressed == "l"){
-      // }
+    if(state == "UP"){
+      if (pressed == "w" && pressed == "s" && pressed == "a" && 
+      pressed == "d" && pressed == "u" && pressed == "j" 
+      && pressed == "o" && pressed == "l"){
+        stopRobot();
+      }
     }
-    lastKeyPressed = keyPressed;
-    lastKeyState = keyState;
+    lastPressed = pressed;
+    lastState = state;
   }
 }
