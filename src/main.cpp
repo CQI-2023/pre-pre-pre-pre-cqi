@@ -43,9 +43,9 @@ bool cringe = false;
 //Servos
 int position_servo1 = 20;
 int position_servo2 = 20;
-const int position_pelle_max = 160;
-const int position_pelle_min = 20;
-const int position_pelle_init = 30;
+// const int position_pelle_max = 160;
+// const int position_pelle_min = 20;
+// const int position_pelle_init = 30;
 
 typedef struct
 {
@@ -139,20 +139,57 @@ void stopRobot()
 //ServoHandler
 void leverCrucifix(int servo){
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 0);
-  delay(500);
+  delay(125);
 }
 void descendreLaColereDeDieu(int servo){
   ISR_Servo.setPosition(ISR_servo[servo].servoIndex, 180);
-  delay(500);
+  delay(125);
 }
 
-// unsigned long servo1Last = 0;
+void approcheHeaven(int servo, int step){
+  int pos;
+  if (servo == 0){
+    position_servo1 += step;
+    pos = position_servo1;
+  }
+  else if(servo == 1){
+    position_servo2 += step;
+    pos = position_servo2;
+  }
+  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
+  delay(125);
+}
+
+void approcheHeaven(int servo, int step){
+  int pos;
+  if (servo == 0){
+    position_servo1 += step;
+    pos = position_servo1;
+  }
+  else if(servo == 1){
+    position_servo2 += step;
+    pos = position_servo2;
+  }
+  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
+  delay(125);
+}
+
+void approcheHell(int servo, int step){
+  int pos;
+  if (servo == 0){
+    position_servo1 -= step;
+    pos = position_servo1;
+  }
+  else if(servo == 1){
+    position_servo2 -= step;
+    pos = position_servo2;
+  }
+  ISR_Servo.setPosition(ISR_servo[servo].servoIndex, pos);
+  delay(125);
+}
 
 void setup()
 {
-  // pwm_init(20000,duty,0,pin_num);
-  // analogWrite(2,1000);
-
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
   pinMode(IN_1, OUTPUT);
@@ -222,6 +259,8 @@ void loop()
       if (keyPressed == "l") backwardRight(speedCar);
       if (keyPressed == "r") leverCrucifix(0);
       if (keyPressed == "f") descendreLaColereDeDieu(0);
+      if (keyPressed == "t") approcheHeaven(0, 10);
+      if (keyPressed == "g") approcheHell(0, 10);
     }
     if(keyPressed == "UP"){
       if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
