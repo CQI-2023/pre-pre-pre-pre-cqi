@@ -232,7 +232,7 @@ void loop()
 {
   server.handleClient();
 
-  state = server.arg("state");
+  state = server.arg("State");
   pressed = server.arg("Key");
 
   // if (servo1Last-micros())
