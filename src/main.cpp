@@ -263,11 +263,11 @@ void loop()
       if (keyPressed == "g") approcheHell(0, 10);
     }
     if(keyPressed == "UP"){
-      if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
-      keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
-      && keyPressed == "o" && keyPressed == "l"){
-        stopRobot();
-      }
+      stopRobot();
+      // if (keyPressed == "w" && keyPressed == "s" && keyPressed == "a" && 
+      // keyPressed == "d" && keyPressed == "u" && keyPressed == "j" 
+      // && keyPressed == "o" && keyPressed == "l"){
+      // }
     }
     lastKeyPressed = keyPressed;
     lastKeyState = keyState;
